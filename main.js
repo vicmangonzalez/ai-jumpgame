@@ -59,7 +59,7 @@ let alive = false;
 
 window.onload = function () {
     start();
-    setInterval(update, 15);
+    setInterval(update, 10);
 }
 
 function start() {
@@ -110,7 +110,6 @@ setInterval(increaseScore, 500);
 const saltar = () => {
     if (haciaArriba && alive && p.y > 80) {
         p.ySpeed = -4;
-        console.log(p.y);
         haciaArriba = false;
     }
 }
