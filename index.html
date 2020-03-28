@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+      <link rel="stylesheet" href="styles/bootstrap.min.css">
+      <link rel="stylesheet" href="styles/juego.css">
+      <title>Saltando con IA</title>
+</head>
+
+<body>
+      <!-- Instrucciones del Juego -->
+      <h2>Saltando con IA</h2>
+
+      <!-- Botón para activar cámara y ejecutar scripts -->
+      <button class="btn btn-danger" type="button" onclick="init()">Abrir cámara</button>
+
+      <!-- Div para webcam e información -->
+      <p class="instrucciones">Necesitarás activar la webcam para jugar:</p>
+      <p class="instrucciones">Aquí aparecerá la webcam:</p>
+      <div id="webcam-container"></div>
+      <div id="label-container"></div>
+      <button class="btn btn-success" type="button" onclick="start()">Reiniciar juego</button>
+
+      <!-- JUEGO -->
+      <div class="juego">
+            <h1 id="showScore"></h1>
+            <link rel="stylesheet" href="styles/bootstrap.min.css">
+
+            <canvas id="canv" width=800 height=500></canvas>
+
+            <script src="main.js"></script>
+      </div>
+      <!-- Fin del Juego -->
+
+      <!-- Script de TensorFlow y Teachable Machine -->
+      <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js">
+      </script>
+      <script type="text/javascript">
+            // Conectando al modelo entrenado en Teachable Machine.
+            const URL = "./model/";
+
+            // Variables globales
+            let model, webcam, labelContainer, maxPredictions;
+            let haciaArriba = false;
+
+            // Cargando la imagen y modelo
+            async function init() {
+                  const modelURL = URL + "model.json";
+                  const metadataURL = URL + "metadata.json";
+
+                  model = await tmImage.load(modelURL, metadataURL);
+                  maxPredictions = model.getTotalClasses();
+
+                  // Agregando función a la webcam
+                  const flip = true; // whether to flip the webcam
+                  webcam = new tmImage.Webcam(200, 200, flip); // width, height, flip
+                  await webcam.setup(); // request access to the webcam
+                  await webcam.play();
+                  window.requestAnimationFrame(loop);
+
+                  // append elements to the DOM
+                  document.getElementById("webcam-container").appendChild(webcam.canvas);
+                  labelContainer = document.getElementById("label-container");
+                  for (let i = 0; i < maxPredictions; i++) { // and class labels
+                        labelContainer.appendChild(document.createElement("div"));
+                  }
+            }
+
+            async function loop() {
+                  webcam.update(); // update the webcam frame
+                  await predict();
+                  window.requestAnimationFrame(loop);
+            }
+
+            // run the webcam image through the image model
+            async function predict() {
+                  // predict can take in an image, video or canvas html element
+                  const prediction = await model.predict(webcam.canvas);
+                  let valorDePrediccion = prediction[1].probability.toFixed(2)
+                  if(valorDePrediccion>0.80){
+                        haciaArriba = true;
+                  }                  
+                  for (let i = 0; i < maxPredictions; i++) {
+                        const classPrediction =
+                              prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+                        labelContainer.childNodes[i].innerHTML = classPrediction;
+                  }
+            }
+      </script>
+
+
+</body>
+
+</html>
