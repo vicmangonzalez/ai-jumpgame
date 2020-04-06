@@ -66,6 +66,8 @@ function start() {
     // Crear jugador y ajustar variables
     p = new Player(100, 200);
     score = 0;
+    rocks = [];
+    rockX = 800;
     alive = true;
 
     for (let i = 0; i < 100; i++) {
