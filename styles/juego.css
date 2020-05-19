@@ -1,21 +1,47 @@
 body {
       width: 100%;
       padding: 10px 20px;
+      background-image: url('../images/juegoBackground.jpg');
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: cover;
 }
 
 #webcam-container {
-      margin-top: 5px;
+      position: absolute;
+      top: 20px;
+      right: 218px;
 }
 
-#webcam-container > canvas {
+#webcam-container>canvas {
       border-radius: 15px;
       border: 5px solid red;
 }
 
+#label-container {
+      position: absolute;
+      top: 335px;
+      right: 225px;
+      font-size: 18px;
+}
+
+#reiniciarJuego {
+      position: absolute;
+      top: 395px;
+      right: 300px;
+}
+
+#instrucciones {
+      width: 30%;
+      position: absolute;
+      bottom: 25px;
+      right: 130px;
+}
+
 .juego {
       position: absolute;
-      top: 10px;
-      left: 400px;
+      top: 20px;
+      left: 50px;
 }
 
 #canv {
@@ -29,11 +55,8 @@ body {
       font-size: 50px;
 }
 
-.instrucciones {
-      margin-top: 10px;
-      margin-bottom: 0px;
-      padding-left: 5px;
-      font-size: 12px;
-      color: gray;
-      font-style: italic;
+#creditos {
+      position: absolute;
+      bottom: 100px;
+      left: 50px;
 }
